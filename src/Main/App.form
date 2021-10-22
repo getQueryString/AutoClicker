@@ -20,7 +20,7 @@
           <text value="Start (in 3s)"/>
         </properties>
       </component>
-      <component id="21bdb" class="javax.swing.JTextField" binding="textfield">
+      <component id="21bdb" class="javax.swing.JTextField" binding="textField">
         <constraints>
           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>

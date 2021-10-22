@@ -11,7 +11,7 @@ public class App {
 
     private JButton btn_start;
     private JPanel mainPanel;
-    private JTextField textfield;
+    private JTextField textField;
     private JTextField input;
 
     private boolean autoClickerRun = false;
@@ -65,7 +65,7 @@ public class App {
                     }
                 } catch (NumberFormatException numberformatexception) {
                     JOptionPane.showMessageDialog(null, "Eingabe muss eine Zahl sein!");
-                    textfield.setSelectedTextColor(Color.RED);
+                    textField.setSelectedTextColor(Color.RED);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Zahl eintragen");
