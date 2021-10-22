@@ -19,7 +19,7 @@ public class App {
     private int checkForInt = 0;
 
     public static void main(String[] args) {
-        JFrame jframe = new JFrame("AutoClicker");
+        JFrame jframe = new JFrame("AutoClicker - v1.0");
 
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setResizable(false);
