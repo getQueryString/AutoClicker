@@ -14,6 +14,7 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 
 public class App {
 
+    private static JFrame jframe;
     private JButton btn_start;
     private JPanel mainPanel;
     private JTextField textField;
@@ -28,7 +29,7 @@ public class App {
     Thread startCounter;
 
     public static void main(String[] args) {
-        JFrame jframe = new JFrame("AutoClicker - v1.0");
+        jframe = new JFrame("AutoClicker - v1.0");
 
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setResizable(false);
@@ -41,7 +42,7 @@ public class App {
         jframe.pack();
         jframe.setVisible(true);
 
-        try {
+        /*try {
             GlobalScreen.registerNativeHook();
         } catch (NativeHookException ex) {
             System.err.println("There was a problem registering the native hook.");
@@ -50,12 +51,11 @@ public class App {
             System.exit(1);
         }
 
-        GlobalScreen.addNativeKeyListener(new GlobalKeyListener());
+        GlobalScreen.addNativeKeyListener(new GlobalKeyListener());*/
     }
 
     @Deprecated
     public App() {
-
         btn_stop.setEnabled(false);
 
         btn_start.addActionListener(e -> {
@@ -65,11 +65,11 @@ public class App {
                     checkForInt = Integer.parseInt(input.getText());
 
                     if (!autoClickerRun) {
-
                         changeButtonText();
                         autoClickerRun = true;
                         btn_stop.setEnabled(true);
-                        enableAutoClicker();
+                        btn_start.setEnabled(false);
+                        startAutoClicker();
                     }
                 } catch (NumberFormatException nfe) {
                     JOptionPane optionPane = new JOptionPane("Eingabe muss eine Zahl sein!", JOptionPane.ERROR_MESSAGE);
@@ -92,14 +92,14 @@ public class App {
     public void changeButtonText() {
         startCounter = new Thread(() -> {
             try {
-                System.out.println("948rzhfuidn");
+                btn_stop.setText("Cancel");
                 btn_start.setText("Start (in 3s)");
                 TimeUnit.SECONDS.sleep(1);
                 btn_start.setText("Start (in 2s)");
                 TimeUnit.SECONDS.sleep(1);
                 btn_start.setText("Start (in 1s)");
                 TimeUnit.SECONDS.sleep(1);
-                btn_start.setText("Start (running)");
+                btn_start.setText("Start");
             } catch (InterruptedException ie) {
 
             }
@@ -107,8 +107,9 @@ public class App {
         startCounter.start();
     }
 
+    // Start AutoClicker
     @Deprecated
-    public void enableAutoClicker() {
+    public void startAutoClicker() {
 
         acThread = new Thread(() -> {
             try {
@@ -116,6 +117,7 @@ public class App {
             } catch (InterruptedException interruptedException) {
                 interruptedException.printStackTrace();
             }
+            btn_stop.setText("Stop");
             while (autoClickerRun) {
                 try {
                     Robot robot = new Robot();
@@ -128,25 +130,33 @@ public class App {
                 counter++;
                 if (counter == Integer.parseInt(input.getText())) {
                     stopAutoClicker();
+                    acThread.stop();
                 }
             }
         });
         acThread.start();
     }
 
+    // Stop AutoClicker
     @Deprecated
     public void stopAutoClicker() {
-        if (acThread.isAlive()) {
-            if (autoClickerRun) {
-                autoClickerRun = false;
-            }
-            counter = 0;
 
-            btn_start.setText("Start");
-            btn_stop.setEnabled(false);
-
-            acThread.stop();
+        if (!btn_start.isEnabled()) {
+            btn_start.setEnabled(true);
         }
+        if (btn_stop.isEnabled()) {
+            btn_stop.setEnabled(false);
+        }
+        if (autoClickerRun) {
+            autoClickerRun = false;
+        }
+        if (startCounter.isAlive()) {
+            btn_stop.setText("Stop");
+            startCounter.stop();
+        }
+        counter = 0;
+
+        btn_start.setText("Start");
     }
 
     private static class GlobalKeyListener implements NativeKeyListener {
