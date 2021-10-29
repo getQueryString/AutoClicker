@@ -102,7 +102,6 @@ public class App {
                 btn_start.setText("Start (in 1s)");
                 TimeUnit.SECONDS.sleep(1);
                 btn_start.setText("Start");
-                jframe.setTitle(jframeTitle + " (running)");
             } catch (InterruptedException ie) {
 
             }
@@ -121,6 +120,7 @@ public class App {
                 interruptedException.printStackTrace();
             }
             btn_stop.setText("Stop");
+            jframe.setTitle(jframeTitle + " (running)");
             while (autoClickerRun) {
                 try {
                     Robot robot = new Robot();
@@ -143,14 +143,13 @@ public class App {
     @Deprecated
     public void stopAutoClicker() {
         jframe.setTitle(jframeTitle);
-
+        counter = 0;
         btn_start.setEnabled(true);
         btn_stop.setEnabled(false);
         autoClickerRun = false;
         btn_stop.setText("Stop");
         startCounter.stop();
         acThread.stop();
-        counter = 0;
         btn_start.setText("Start");
     }
 
