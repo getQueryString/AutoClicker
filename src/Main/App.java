@@ -7,8 +7,6 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.concurrent.TimeUnit;
 
-import com.github.kwhat.jnativehook.GlobalScreen;
-import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 
@@ -17,9 +15,10 @@ public class App {
     private static JFrame jframe;
     private JButton btn_start;
     private JPanel mainPanel;
-    private JTextField textField;
+    private JTextField txt_by;
     private JTextField input;
     private JButton btn_stop;
+    private JTextField txt_inf;
 
     private boolean autoClickerRun = false;
     private int counter = 0;
@@ -44,7 +43,7 @@ public class App {
         jframe.pack();
         jframe.setVisible(true);
 
-        try {
+        /*try {
             GlobalScreen.registerNativeHook();
         } catch (NativeHookException ex) {
             System.err.println("There was a problem registering the native hook.");
@@ -53,7 +52,7 @@ public class App {
             System.exit(1);
         }
 
-        GlobalScreen.addNativeKeyListener(new GlobalKeyListener());
+        GlobalScreen.addNativeKeyListener(new GlobalKeyListener());*/
     }
 
     @Deprecated
@@ -78,7 +77,6 @@ public class App {
                     JDialog dialog = optionPane.createDialog("Eingabefehler");
                     dialog.setAlwaysOnTop(true);
                     dialog.setVisible(true);
-                    textField.setSelectedTextColor(Color.RED);
                 }
             } else {
                 JOptionPane optionPane = new JOptionPane("Zahl eintragen", JOptionPane.ERROR_MESSAGE);
@@ -148,9 +146,9 @@ public class App {
         btn_stop.setEnabled(false);
         autoClickerRun = false;
         btn_stop.setText("Stop");
+        btn_start.setText("Start");
         startCounter.stop();
         acThread.stop();
-        btn_start.setText("Start");
     }
 
     private static class GlobalKeyListener implements NativeKeyListener {
