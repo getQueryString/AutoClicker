@@ -28,8 +28,10 @@ public class App {
     Thread acThread;
     Thread startCounter;
 
+    private static String jframeTitle = "AutoClicker - v1.0";
+
     public static void main(String[] args) {
-        jframe = new JFrame("AutoClicker - v1.0");
+        jframe = new JFrame(jframeTitle);
 
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jframe.setResizable(false);
@@ -42,7 +44,7 @@ public class App {
         jframe.pack();
         jframe.setVisible(true);
 
-        /*try {
+        try {
             GlobalScreen.registerNativeHook();
         } catch (NativeHookException ex) {
             System.err.println("There was a problem registering the native hook.");
@@ -51,7 +53,7 @@ public class App {
             System.exit(1);
         }
 
-        GlobalScreen.addNativeKeyListener(new GlobalKeyListener());*/
+        GlobalScreen.addNativeKeyListener(new GlobalKeyListener());
     }
 
     @Deprecated
@@ -100,6 +102,7 @@ public class App {
                 btn_start.setText("Start (in 1s)");
                 TimeUnit.SECONDS.sleep(1);
                 btn_start.setText("Start");
+                jframe.setTitle(jframeTitle + " (running)");
             } catch (InterruptedException ie) {
 
             }
@@ -130,7 +133,6 @@ public class App {
                 counter++;
                 if (counter == Integer.parseInt(input.getText())) {
                     stopAutoClicker();
-                    acThread.stop();
                 }
             }
         });
@@ -140,22 +142,15 @@ public class App {
     // Stop AutoClicker
     @Deprecated
     public void stopAutoClicker() {
+        jframe.setTitle(jframeTitle);
 
-        if (!btn_start.isEnabled()) {
-            btn_start.setEnabled(true);
-        }
-        if (btn_stop.isEnabled()) {
-            btn_stop.setEnabled(false);
-        }
-        if (autoClickerRun) {
-            autoClickerRun = false;
-        }
-        if (startCounter.isAlive()) {
-            btn_stop.setText("Stop");
-            startCounter.stop();
-        }
+        btn_start.setEnabled(true);
+        btn_stop.setEnabled(false);
+        autoClickerRun = false;
+        btn_stop.setText("Stop");
+        startCounter.stop();
+        acThread.stop();
         counter = 0;
-
         btn_start.setText("Start");
     }
 
