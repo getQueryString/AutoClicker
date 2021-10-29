@@ -7,6 +7,11 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.concurrent.TimeUnit;
 
+import com.github.kwhat.jnativehook.GlobalScreen;
+import com.github.kwhat.jnativehook.NativeHookException;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
+
 public class App {
 
     private JButton btn_start;
@@ -20,6 +25,7 @@ public class App {
     private int checkForInt = 0;
 
     Thread acThread;
+    Thread startCounter;
 
     public static void main(String[] args) {
         JFrame jframe = new JFrame("AutoClicker - v1.0");
@@ -34,10 +40,24 @@ public class App {
 
         jframe.pack();
         jframe.setVisible(true);
+
+        try {
+            GlobalScreen.registerNativeHook();
+        } catch (NativeHookException ex) {
+            System.err.println("There was a problem registering the native hook.");
+            System.err.println(ex.getMessage());
+
+            System.exit(1);
+        }
+
+        GlobalScreen.addNativeKeyListener(new GlobalKeyListener());
     }
 
     @Deprecated
     public App() {
+
+        btn_stop.setEnabled(false);
+
         btn_start.addActionListener(e -> {
 
             if (!input.getText().isEmpty()) {
@@ -45,15 +65,13 @@ public class App {
                     checkForInt = Integer.parseInt(input.getText());
 
                     if (!autoClickerRun) {
-                        try {
-                            TimeUnit.SECONDS.sleep(3);
-                        } catch (InterruptedException interruptedException) {
-                            interruptedException.printStackTrace();
-                        }
+
+                        changeButtonText();
                         autoClickerRun = true;
+                        btn_stop.setEnabled(true);
                         enableAutoClicker();
                     }
-                } catch (NumberFormatException numberformatexception) {
+                } catch (NumberFormatException nfe) {
                     JOptionPane optionPane = new JOptionPane("Eingabe muss eine Zahl sein!", JOptionPane.ERROR_MESSAGE);
                     JDialog dialog = optionPane.createDialog("Eingabefehler");
                     dialog.setAlwaysOnTop(true);
@@ -68,23 +86,36 @@ public class App {
             }
         });
 
-        btn_stop.addActionListener(e -> {
-            if (autoClickerRun) {
-                autoClickerRun = false;
-                try {
-                    if (acThread.isAlive()) {
-                        acThread.join();
-                    }
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
+        btn_stop.addActionListener(e -> stopAutoClicker());
+    }
+
+    public void changeButtonText() {
+        startCounter = new Thread(() -> {
+            try {
+                System.out.println("948rzhfuidn");
+                btn_start.setText("Start (in 3s)");
+                TimeUnit.SECONDS.sleep(1);
+                btn_start.setText("Start (in 2s)");
+                TimeUnit.SECONDS.sleep(1);
+                btn_start.setText("Start (in 1s)");
+                TimeUnit.SECONDS.sleep(1);
+                btn_start.setText("Start (running)");
+            } catch (InterruptedException ie) {
+
             }
         });
+        startCounter.start();
     }
 
     @Deprecated
     public void enableAutoClicker() {
+
         acThread = new Thread(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
             while (autoClickerRun) {
                 try {
                     Robot robot = new Robot();
@@ -96,11 +127,43 @@ public class App {
                 }
                 counter++;
                 if (counter == Integer.parseInt(input.getText())) {
-                    autoClickerRun = false;
-                    counter = 0;
+                    stopAutoClicker();
                 }
             }
         });
         acThread.start();
+    }
+
+    @Deprecated
+    public void stopAutoClicker() {
+        if (acThread.isAlive()) {
+            if (autoClickerRun) {
+                autoClickerRun = false;
+            }
+            counter = 0;
+
+            btn_start.setText("Start");
+            btn_stop.setEnabled(false);
+
+            acThread.stop();
+        }
+    }
+
+    private static class GlobalKeyListener implements NativeKeyListener {
+
+        public void nativeKeyPressed(NativeKeyEvent e) {
+        /*if (e.getKeyCode() == KeyEvent.VK_F6) {
+            System.out.println("F6 was pressed.");
+        }*/
+            System.out.println("Pressed: " + e.getKeyChar());
+        }
+
+        public void nativeKeyReleased(NativeKeyEvent e) {
+            System.out.println("Released: " + e.getKeyChar());
+        }
+
+        public void nativeKeyTyped(NativeKeyEvent e) {
+            System.out.println("Typed: " + e.getKeyChar());
+        }
     }
 }
