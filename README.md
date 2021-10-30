@@ -1,6 +1,6 @@
 # AutoClicker
 
-***Programmed for a friend***
+***Programmed for someone else***
 <br>
 <br>
 Publication: **maybe** soon
