@@ -19,10 +19,12 @@ public class App {
     private JTextField input;
     private JButton btn_stop;
     private JTextField txt_inf;
+    private JTextField cps_input
 
     private boolean autoClickerRun = false;
     private int counter = 0;
-    private int checkForInt = 0;
+    private int checkForIntAmount = 0;
+    private int checkForIntCPS = 0;
 
     Thread acThread;
     Thread startCounter;
@@ -61,9 +63,10 @@ public class App {
 
         btn_start.addActionListener(e -> {
 
-            if (!input.getText().isEmpty()) {
+            if (!inputAmount.getText().isEmpty() || !cps_input().isEmpty) {
                 try {
-                    checkForInt = Integer.parseInt(input.getText());
+                    checkForInt = Integer.parseInt(inputAmount.getText());
+                    checkForInt = Integer.parseInt(cps_input.getText());
 
                     if (!autoClickerRun) {
                         changeButtonText();
@@ -124,7 +127,7 @@ public class App {
                     Robot robot = new Robot();
                     robot.mousePress(InputEvent.BUTTON1_MASK);
                     robot.mouseRelease(InputEvent.BUTTON1_MASK);
-                    TimeUnit.MILLISECONDS.sleep(10);
+                    TimeUnit.MILLISECONDS.sleep(Integer.parseInt(cps_input.getText())));
                 } catch (AWTException | InterruptedException awtException) {
                     awtException.printStackTrace();
                 }
