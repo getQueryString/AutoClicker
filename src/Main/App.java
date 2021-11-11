@@ -19,7 +19,7 @@ public class App {
     private JTextField input;
     private JButton btn_stop;
     private JTextField txt_inf;
-    private JTextField cps_input
+    private JTextField cps_input;
 
     private boolean autoClickerRun = false;
     private int counter = 0;
